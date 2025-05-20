@@ -1,5 +1,5 @@
 {
-  "name": "option-ts",
+  "name": "@mikkurogue/option-ts",
   "version": "0.1.0",
   "description": "Rust-style Option<T> type for TypeScript",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
     "url": "https://github.com/mikkurogue/option-ts"
   },
   "author": "mikkurogue",
-  "license": "MIT",
+  "license": "GPLV2",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "typescript": "5.8.2",
