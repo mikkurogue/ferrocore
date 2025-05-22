@@ -4,7 +4,7 @@
   "description": "Rust-style Option<T> type for TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "keywords": ["option", "rust", "none", "some", "utility"]
+  "keywords": ["option", "rust", "none", "some", "utility"],
   "scripts": {
     "build": "tsc",
     "test": "vitest"
