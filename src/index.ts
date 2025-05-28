@@ -42,12 +42,19 @@ export function unwrapOr<T>(opt: Option<T>, fallback: T): T {
 }
 
 /*
- * A check to see if we can convert a possible nulll value to a Some
+ * A check to see if we can convert a possible null value to a Some
  */
-export function fromNullable<T>(val: T | null | undefined): Option<T> {
+export function fromNullable<T>(val: T | null): Option<T> {
   return val != null ? Some(val) : None();
 }
 
+export function fromUndefined<T>(val: T | undefined): Option<T> {
+  return val !== undefined ? Some(val) : None();
+}
+
+/**
+ * Simple matcher to see if a value is Some or None (something or undefined)
+ */
 export function match<T, R>(opt: Option<T>) {
   return {
     Some(fn: (val: T) => R) {

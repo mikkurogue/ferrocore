@@ -1,23 +1,24 @@
 {
-  "name": "@mikkurogue/option-ts",
-  "version": "0.1.1",
-  "description": "Rust-style Option<T> type for TypeScript",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "keywords": ["option", "rust", "none", "some", "utility"],
-  "scripts": {
-    "build": "tsc",
-    "test": "vitest"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mikkurogue/option-ts"
-  },
-  "author": "mikkurogue",
-  "license": "GPLV2",
-  "devDependencies": {
-    "@types/jest": "^29.5.14",
-    "typescript": "5.8.2",
-    "vitest": "^3.1.4"
-  }
+	"name": "@mikkurogue/option-ts",
+	"version": "0.1.2",
+	"description": "Rust-style Option<T> type for TypeScript",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"keywords": ["option", "rust", "none", "some", "utility", "pattern-match"],
+	"scripts": {
+		"build": "tsc",
+		"test": "vitest"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mikkurogue/option-ts"
+	},
+	"author": "mikkurogue",
+	"license": "GPLV2",
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@types/jest": "^29.5.14",
+		"typescript": "5.8.2",
+		"vitest": "^3.1.4"
+	}
 }
