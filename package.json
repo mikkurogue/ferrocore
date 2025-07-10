@@ -1,12 +1,30 @@
 {
 	"name": "@mikkurogue/option-ts",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description": "Rust-style Option<T> type for TypeScript",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"keywords": ["option", "rust", "none", "some", "utility", "pattern-match"],
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"keywords": [
+		"option",
+		"rust",
+		"none",
+		"some",
+		"utility",
+		"pattern-match"
+	],
 	"scripts": {
-		"build": "tsc",
+		"build": "tsgo",
 		"test": "vitest"
 	},
 	"repository": {
@@ -17,8 +35,7 @@
 	"license": "GPLV2",
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
-		"@types/jest": "^29.5.14",
-		"typescript": "5.8.2",
+		"@typescript/native-preview": "7.0.0-dev.20250710.1",
 		"vitest": "^3.1.4"
 	}
 }
