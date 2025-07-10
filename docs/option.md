@@ -15,9 +15,9 @@ export type Option<T> = { kind: "Some"; value: T } | { kind: "None" };
 Creates an `Option` that contains a value.
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some } from '@mikkurogue/option-ts/option';
 
-const myValue = Option.Some(123);
+const myValue = Some(123);
 // myValue is { kind: "Some", value: 123 }
 ```
 
@@ -26,9 +26,9 @@ const myValue = Option.Some(123);
 Creates an `Option` that represents the absence of a value.
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, None } from '@mikkurogue/option-ts/option';
 
-const noValue = Option.None();
+const noValue = None();
 // noValue is { kind: "None" }
 ```
 
@@ -37,15 +37,15 @@ const noValue = Option.None();
 Checks if an `Option` contains a value (is "Some").
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, isSome } from '@mikkurogue/option-ts/option';
 
-const value = Option.Some(10);
-if (Option.isSome(value)) {
+const value = Some(10);
+if (isSome(value)) {
   console.log(value.value); // 10
 }
 
-const noValue = Option.None();
-console.log(Option.isSome(noValue)); // false
+const noValue = None();
+console.log(isSome(noValue)); // false
 ```
 
 ### `isNone<T>(opt: Option<T>): opt is { kind: "None" }`
@@ -53,15 +53,15 @@ console.log(Option.isSome(noValue)); // false
 Checks if an `Option` represents the absence of a value (is "None").
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, isNone } from '@mikkurogue/option-ts/option';
 
-const noValue = Option.None();
-if (Option.isNone(noValue)) {
+const noValue = None();
+if (isNone(noValue)) {
   console.log("No value present");
 }
 
-const value = Option.Some(10);
-console.log(Option.isNone(value)); // false
+const value = Some(10);
+console.log(isNone(value)); // false
 ```
 
 ### `ifSome<T>(opt: Option<T>, fn: (val: T) => void): void`
@@ -69,44 +69,44 @@ console.log(Option.isNone(value)); // false
 Executes a function if the `Option` is "Some".
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, ifSome, None } from '@mikkurogue/option-ts/option';
 
 let result: number | undefined;
-Option.ifSome(Option.Some(5), (val) => {
+ifSome(Some(5), (val) => {
   result = val * 2; // result will be 10
 });
 
-Option.ifSome(Option.None(), (val) => {
+ifSome(None(), (val) => {
   // This function will not be executed
 });
 ```
 
-### `unwrap<T>(opt: Option<T>): T`
+### `unwrapOption<T>(opt: Option<T>): T`
 
 Extracts the value from a "Some" `Option`. Throws an error if the `Option` is "None". Use with caution.
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, unwrapOption } from '@mikkurogue/option-ts/option';
 
-const value = Option.Some(10);
-console.log(Option.unwrap(value)); // 10
+const value = Some(10);
+console.log(unwrapOption(value)); // 10
 
-const noValue = Option.None();
-// Option.unwrap(noValue); // Throws Error: Tried to unwrap None
+const noValue = None();
+// unwrapOption(noValue); // Throws Error: Tried to unwrap None
 ```
 
-### `unwrapOr<T>(opt: Option<T>, fallback: T): T`
+### `unwrapOrOption<T>(opt: Option<T>, fallback: T): T`
 
 Extracts the value from a "Some" `Option`, or returns a fallback value if it's "None".
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, unwrapOrOption } from '@mikkurogue/option-ts/option';
 
-const value = Option.Some(10);
-console.log(Option.unwrapOr(value, 0)); // 10
+const value = Some(10);
+console.log(unwrapOrOption(value, 0)); // 10
 
-const noValue = Option.None();
-console.log(Option.unwrapOr(noValue, 0)); // 0
+const noValue = None();
+console.log(unwrapOrOption(noValue, 0)); // 0
 ```
 
 ### `fromNullable<T>(val: T | null): Option<T>`
@@ -114,13 +114,13 @@ console.log(Option.unwrapOr(noValue, 0)); // 0
 Converts a nullable value (`T | null`) into an `Option<T>`. Returns `Some(value)` if the value is not `null`, otherwise returns `None()`.
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, fromNullable } from '@mikkurogue/option-ts/option';
 
 const nullableValue: number | null = 123;
-const option1 = Option.fromNullable(nullableValue); // Option.Some(123)
+const option1 = fromNullable(nullableValue); // Some(123)
 
 const nullValue: number | null = null;
-const option2 = Option.fromNullable(nullValue); // Option.None()
+const option2 = fromNullable(nullValue); // None()
 ```
 
 ### `fromUndefined<T>(val: T | undefined): Option<T>`
@@ -128,99 +128,99 @@ const option2 = Option.fromNullable(nullValue); // Option.None()
 Converts an undefined value (`T | undefined`) into an `Option<T>`. Returns `Some(value)` if the value is not `undefined`, otherwise returns `None()`.
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, fromUndefined } from '@mikkurogue/option-ts/option';
 
 const undefinedValue: number | undefined = undefined;
-const option1 = Option.fromUndefined(undefinedValue); // Option.None()
+const option1 = fromUndefined(undefinedValue); // None()
 
 const definedValue: number | undefined = 456;
-const option2 = Option.fromUndefined(definedValue); // Option.Some(456)
+const option2 = fromUndefined(definedValue); // Some(456)
 ```
 
-### `match<T, R>(opt: Option<T>)`
+### `matchOption<T, R>(opt: Option<T>)`
 
 Provides a way to handle both "Some" and "None" cases of an `Option`.
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, matchOption } from '@mikkurogue/option-ts/option';
 
-const value = Option.Some(10);
-const result1 = Option.match(value).Some((val) => val * 2);
-// result1 is Option.Some(20)
+const value = Some(10);
+const result1 = matchOption(value).Some((val) => val * 2);
+// result1 is Some(20)
 
-const noValue = Option.None();
-const result2 = Option.match(noValue).None(() => "default");
-// result2 is Option.Some("default")
+const noValue = None();
+const result2 = matchOption(noValue).None(() => "default");
+// result2 is Some("default")
 ```
 
-### `map<T, U>(opt: Option<T>, fn: (value: T) => U): Option<U>`
+### `mapOption<T, U>(opt: Option<T>, fn: (value: T) => U): Option<U>`
 
 Transforms the value inside a "Some" `Option` using a mapping function. If the `Option` is "None", it remains "None".
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, mapOption } from '@mikkurogue/option-ts/option';
 
-const value = Option.Some(5);
-const mappedValue = Option.map(value, (x) => x * 2); // Option.Some(10)
+const value = Some(5);
+const mappedValue = mapOption(value, (x) => x * 2); // Some(10)
 
-const noValue = Option.None();
-const mappedNoValue = Option.map(noValue, (x: number) => x * 2); // Option.None()
+const noValue = None();
+const mappedNoValue = mapOption(noValue, (x: number) => x * 2); // None()
 ```
 
-### `fromThrowable<T, Args extends any[]>(fn: (...args: Args) => T): (...args: Args) => Option<T>`
+### `fromThrowableOption<T, Args extends any[]>(fn: (...args: Args) => T): (...args: Args) => Option<T>`
 
 Wraps a potentially throwing function into a function that returns an `Option`. If the original function executes successfully, it returns `Some(result)`. If it throws, it returns `None()`.
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, fromThrowableOption } from '@mikkurogue/option-ts/option';
 
-const safeParseInt = Option.fromThrowable(parseInt);
+const safeParseInt = fromThrowableOption(parseInt);
 
-const num1 = safeParseInt("123"); // Option.Some(123)
-const num2 = safeParseInt("abc"); // Option.None()
+const num1 = safeParseInt("123"); // Some(123)
+const num2 = safeParseInt("abc"); // None()
 ```
 
-### `flatMap<T, U>(opt: Option<T>, fn: (value: T) => Option<U>): Option<U>`
+### `flatMapOption<T, U>(opt: Option<T>, fn: (value: T) => Option<U>): Option<U>`
 
 Chains operations that return `Option` types. If the current `Option` is "Some", it applies the function and returns the new `Option`. If it's "None", it propagates the "None".
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, fromUndefined, flatMapOption } from '@mikkurogue/option-ts/option';
 
-const getUserAge = (user: { name: string; age?: number }): Option.Option<number> => {
-  return Option.fromUndefined(user.age);
+const getUserAge = (user: { name: string; age?: number }): Option<number> => {
+  return fromUndefined(user.age);
 };
 
-const user1 = Option.Some({ name: "Alice", age: 30 });
-const age1 = Option.flatMap(user1, getUserAge); // Option.Some(30)
+const user1 = Some({ name: "Alice", age: 30 });
+const age1 = flatMapOption(user1, getUserAge); // Some(30)
 
-const user2 = Option.Some({ name: "Bob" });
-const age2 = Option.flatMap(user2, getUserAge); // Option.None()
+const user2 = Some({ name: "Bob" });
+const age2 = flatMapOption(user2, getUserAge); // None()
 ```
 
-### `orElse<T>(opt: Option<T>, fallback: Option<T>): Option<T>`
+### `orElseOption<T>(opt: Option<T>, fallback: Option<T>): Option<T>`
 
 Returns the `Option` if it is "Some", otherwise returns the provided fallback `Option`.
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, orElseOption } from '@mikkurogue/option-ts/option';
 
-const value = Option.Some(10);
-const result1 = Option.orElse(value, Option.Some(0)); // Option.Some(10)
+const value = Some(10);
+const result1 = orElseOption(value, Some(0)); // Some(10)
 
-const noValue = Option.None();
-const result2 = Option.orElse(noValue, Option.Some(0)); // Option.Some(0)
+const noValue = None();
+const result2 = orElseOption(noValue, Some(0)); // Some(0)
 ```
 
-### `filter<T>(opt: Option<T>, predicate: (value: T) => boolean): Option<T>`
+### `filterOption<T>(opt: Option<T>, predicate: (value: T) => boolean): Option<T>`
 
 Filters a "Some" `Option` based on a predicate. If the `Option` is "Some" and the predicate returns `true`, it remains "Some". Otherwise, it becomes "None".
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, filterOption } from '@mikkurogue/option-ts/option';
 
-const value = Option.Some(10);
-const filteredValue1 = Option.filter(value, (x) => x > 5); // Option.Some(10)
+const value = Some(10);
+const filteredValue1 = filterOption(value, (x) => x > 5); // Some(10)
 
-const filteredValue2 = Option.filter(value, (x) => x > 15); // Option.None()
+const filteredValue2 = filterOption(value, (x) => x > 15); // None()
 ```

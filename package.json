@@ -13,6 +13,16 @@
 			"import": "./dist/index.js",
 			"require": "./dist/index.js",
 			"types": "./dist/index.d.ts"
+		},
+		"./option": {
+			"import": "./dist/option/index.js",
+			"require": "./dist/option/index.js",
+			"types": "./dist/option/index.d.ts"
+		},
+		"./result": {
+			"import": "./dist/result/index.js",
+			"require": "./dist/result/index.js",
+			"types": "./dist/result/index.d.ts"
 		}
 	},
 	"keywords": [

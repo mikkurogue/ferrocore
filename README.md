@@ -23,62 +23,62 @@ yarn add @mikkurogue/option-ts
 ### Option Example
 
 ```typescript
-import { Option } from '@mikkurogue/option-ts';
+import { Option, Some, None, ifSome, unwrapOption, unwrapOrOption } from '@mikkurogue/option-ts';
 
-function getUserById(id: string): Option.Option<{ name: string }> {
+function getUserById(id: string): Option<{ name: string }> {
   if (id === "123") {
-    return Option.Some({ name: "Alice" });
+    return Some({ name: "Alice" });
   }
-  return Option.None();
+  return None();
 }
 
 const user = getUserById("123");
 
-Option.ifSome(user, (u) => {
+ifSome(user, (u) => {
   console.log(`User found: ${u.name}`);
 });
 
-const userName = Option.unwrapOr(user, { name: "Guest" }).name;
+const userName = unwrapOrOption(user, { name: "Guest" }).name;
 console.log(userName); // Alice
 
 const nonExistentUser = getUserById("456");
-const defaultUserName = Option.unwrapOr(nonExistentUser, { name: "Guest" }).name;
+const defaultUserName = unwrapOrOption(nonExistentUser, { name: "Guest" }).name;
 console.log(defaultUserName); // Guest
 ```
 
 ### Result Example
 
 ```typescript
-import { Result } from '@mikkurogue/option-ts';
+import { Result, Ok, Err, match, fromThrowable } from '@mikkurogue/option-ts';
 
-function divide(a: number, b: number): Result.Result<number, string> {
+function divide(a: number, b: number): Result<number, string> {
   if (b === 0) {
-    return Result.Err("Cannot divide by zero");
+    return Err("Cannot divide by zero");
   }
-  return Result.Ok(a / b);
+  return Ok(a / b);
 }
 
 const division1 = divide(10, 2);
-Result.match(
+match(
   division1,
   (val) => console.log(`Result: ${val}`), // Result: 5
   (err) => console.error(`Error: ${err}`)
 );
 
 const division2 = divide(10, 0);
-Result.match(
+match(
   division2,
   (val) => console.log(`Result: ${val}`),
   (err) => console.error(`Error: ${err}`) // Error: Cannot divide by zero
 );
 
-const safeParseJson = Result.fromThrowable(
+const safeParseJson = fromThrowable(
   JSON.parse,
   (e) => (e as Error).message
 );
 
 const parsedJson = safeParseJson('{"key": "value"}');
-Result.match(
+match(
   parsedJson,
   (data) => console.log("Parsed JSON:", data), // Parsed JSON: { key: 'value' }
   (error) => console.error("JSON Error:", error)

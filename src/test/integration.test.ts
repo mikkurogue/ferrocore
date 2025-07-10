@@ -1,20 +1,20 @@
 import { test, expect } from "vitest";
-import { Option, Result } from "..";
+import { Option, Some, None, isSome, unwrapOption, unwrapOrOption, fromNullable, fromUndefined, matchOption, mapOption, fromThrowableOption, flatMapOption, orElseOption, filterOption, Result, Ok, Err, isOk, isErr, unwrap, unwrapErr, unwrapOr, map, mapErr, flatMap, orElse, fromThrowable, match } from "..";
 
 // --- Scenario 1: User Input Parsing and Calculation ---
 
 // Function that parses a string to a number, returning Option<number>
-function parseNumber(input: string): Option.Option<number> {
+function parseNumber(input: string): Option<number> {
     const num = Number(input);
-    return isNaN(num) ? Option.None() : Option.Some(num);
+    return isNaN(num) ? None() : Some(num);
 }
 
 // Function that performs division, returning Result<number, string>
-function divide(numerator: number, denominator: number): Result.Result<number, string> {
+function divide(numerator: number, denominator: number): Result<number, string> {
     if (denominator === 0) {
-        return Result.Err("Division by zero");
+        return Err("Division by zero");
     }
-    return Result.Ok(numerator / denominator);
+    return Ok(numerator / denominator);
 }
 
 // Integration test: Parse input, perform division, and handle results
@@ -26,16 +26,16 @@ test("Integration: Parse, Divide, and Handle Results", () => {
     const numA = parseNumber(inputA);
     const numB = parseNumber(inputB);
 
-    const divisionResultA = Option.flatMap(numA, (a) =>
-        Option.flatMap(numB, (b) => {
+    const divisionResultA = flatMapOption(numA, (a) =>
+        flatMapOption(numB, (b) => {
             const divisionResult = divide(a, b); // This returns Result<number, string>
-            return Option.Some(divisionResult); // Wrap the Result in an Option.Some
+            return Some(divisionResult); // Wrap the Result in an Option.Some
         })
     );
 
-    expect(Option.isSome(divisionResultA)).toBe(true);
-    expect(Result.isOk(Option.unwrap(divisionResultA))).toBe(true);
-    expect(Result.unwrap(Option.unwrap(divisionResultA))).toBe(5);
+    expect(isSome(divisionResultA)).toBe(true);
+    expect(isOk(unwrapOption(divisionResultA))).toBe(true);
+    expect(unwrap(unwrapOption(divisionResultA))).toBe(5);
 
     // Scenario B: Invalid input for numerator
     const inputC = "abc";
@@ -44,14 +44,14 @@ test("Integration: Parse, Divide, and Handle Results", () => {
     const numC = parseNumber(inputC);
     const numD = parseNumber(inputD);
 
-    const divisionResultB = Option.flatMap(numC, (a) =>
-        Option.flatMap(numD, (b) => {
+    const divisionResultB = flatMapOption(numC, (a) =>
+        flatMapOption(numD, (b) => {
             const divisionResult = divide(a, b); // This returns Result<number, string>
-            return Option.Some(divisionResult); // Wrap the Result in an Option.Some
+            return Some(divisionResult); // Wrap the Result in an Option.Some
         })
     );
 
-    expect(Option.isSome(divisionResultB)).toBe(false); // Expect None because numC is None
+    expect(isSome(divisionResultB)).toBe(false); // Expect None because numC is None
 
     // Scenario C: Division by zero
     const inputE = "10";
@@ -60,69 +60,69 @@ test("Integration: Parse, Divide, and Handle Results", () => {
     const numE = parseNumber(inputE);
     const numF = parseNumber(inputF);
 
-    const divisionResultC = Option.flatMap(numE, (a) =>
-        Option.flatMap(numF, (b) => {
+    const divisionResultC = flatMapOption(numE, (a) =>
+        flatMapOption(numF, (b) => {
             const divisionResult = divide(a, b); // This returns Result<number, string>
-            return Option.Some(divisionResult); // Wrap the Result in an Option.Some
+            return Some(divisionResult); // Wrap the Result in an Option.Some
         })
     );
 
-    expect(Option.isSome(divisionResultC)).toBe(true);
-    expect(Result.isErr(Option.unwrap(divisionResultC))).toBe(true);
-    expect(Result.unwrapErr(Option.unwrap(divisionResultC))).toBe("Division by zero");
+    expect(isSome(divisionResultC)).toBe(true);
+    expect(isErr(unwrapOption(divisionResultC))).toBe(true);
+    expect(unwrapErr(unwrapOption(divisionResultC))).toBe("Division by zero");
 });
 
 // --- Scenario 2: Chaining operations with mixed Option and Result ---
 
 // Function that fetches user data (might not exist)
-function fetchUser(id: string): Option.Option<{ name: string; age: number }> {
+function fetchUser(id: string): Option<{ name: string; age: number }> {
     if (id === "123") {
-        return Option.Some({ name: "Alice", age: 30 });
+        return Some({ name: "Alice", age: 30 });
     }
-    return Option.None();
+    return None();
 }
 
 // Function that validates user age (might fail validation)
-function validateAge(user: { name: string; age: number }): Result.Result<{ name: string; age: number }, string> {
+function validateAge(user: { name: string; age: number }): Result< { name: string; age: number }, string> {
     if (user.age < 18) {
-        return Result.Err("User is too young");
+        return Err("User is too young");
     }
-    return Result.Ok(user);
+    return Ok(user);
 }
 
 test("Integration: Chaining Option and Result operations", () => {
     // Scenario A: User found and age valid
     const userA = fetchUser("123");
-    const processedUserA = Option.flatMap(userA, (user) => {
-        return Result.match(
+    const processedUserA = flatMapOption(userA, (user) => {
+        return match( // Use match from Result
             validateAge(user),
-            (validUser) => Option.Some(validUser),
-            (error) => Option.None()
+            (validUser) => Some(validUser),
+            (error) => None()
         );
     });
 
-    expect(Option.isSome(processedUserA)).toBe(true);
-    expect(Option.unwrap(processedUserA)?.name).toBe("Alice");
+    expect(isSome(processedUserA)).toBe(true);
+    expect(unwrapOption(processedUserA)?.name).toBe("Alice");
 
     // Scenario B: User not found
     const userB = fetchUser("456");
-    const processedUserB = Option.flatMap(userB, (user) => {
-        return Result.match(
+    const processedUserB = flatMapOption(userB, (user) => {
+        return match( // Use match from Result
             validateAge(user),
-            (validUser) => Option.Some(validUser),
-            (error) => Option.None()
+            (validUser) => Some(validUser),
+            (error) => None()
         );
     });
 
     expect(processedUserB.kind).toBe("None");
 
     // Scenario C: User found but age invalid
-    const userC = Option.Some({ name: "Bob", age: 16 });
-    const processedUserC = Option.flatMap(userC, (user) => {
-        return Result.match(
+    const userC = Some({ name: "Bob", age: 16 });
+    const processedUserC = flatMapOption(userC, (user) => {
+        return match( // Use match from Result
             validateAge(user),
-            (validUser) => Option.Some(validUser),
-            (error) => Option.None()
+            (validUser) => Some(validUser),
+            (error) => None()
         );
     });
 
