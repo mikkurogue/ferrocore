@@ -1,2 +1,3 @@
-export { Option, Some, None, isSome, isNone, ifSome, unwrapOption, unwrapOrOption, fromNullable, fromUndefined, matchOption, mapOption, fromThrowableOption, flatMapOption, orElseOption, filterOption } from "./option";
-export { Result, Ok, Err, isOk, isErr, unwrap, unwrapErr, unwrapOr, map, mapErr, flatMap, orElse, fromThrowable, match } from "./result";
+export * from "./option";
+export * from "./result";
+
