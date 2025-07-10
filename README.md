@@ -91,7 +91,7 @@ For more detailed information and examples, please refer to the [full documentat
 
 ## Build System
 
-This project uses [tsgo](https://github.com/microsoft/tsgo) as its build system for fast and efficient compilation.
+This project uses [tsgo](https://github.com/microsoft/typescript-go) as its build system for fast and efficient compilation.
 
 ## Contributing
 
