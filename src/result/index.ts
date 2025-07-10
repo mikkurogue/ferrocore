@@ -32,7 +32,9 @@ export function isOk<T, E>(res: Result<T, E>): res is { kind: "Ok"; value: T } {
  * @param res The `Result` to check.
  * @returns `true` if the `Result` is "Err", `false` otherwise.
  */
-export function isErr<T, E>(res: Result<T, E>): res is { kind: "Err"; error: E } {
+export function isErr<T, E>(
+  res: Result<T, E>,
+): res is { kind: "Err"; error: E } {
   return res.kind === "Err";
 }
 
@@ -77,7 +79,10 @@ export function unwrapOr<T, E>(res: Result<T, E>, fallback: T): T {
  * @param fn The mapping function to apply to the successful value.
  * @returns A new `Result` with the transformed value, or "Err" if the original was "Err".
  */
-export function map<T, E, U>(res: Result<T, E>, fn: (value: T) => U): Result<U, E> {
+export function map<T, E, U>(
+  res: Result<T, E>,
+  fn: (value: T) => U,
+): Result<U, E> {
   return isOk(res) ? Ok(fn(res.value)) : Err(res.error);
 }
 
@@ -88,7 +93,10 @@ export function map<T, E, U>(res: Result<T, E>, fn: (value: T) => U): Result<U, 
  * @param fn The mapping function to apply to the error value.
  * @returns A new `Result` with the transformed error, or "Ok" if the original was "Ok".
  */
-export function mapErr<T, E, F>(res: Result<T, E>, fn: (error: E) => F): Result<T, F> {
+export function mapErr<T, E, F>(
+  res: Result<T, E>,
+  fn: (error: E) => F,
+): Result<T, F> {
   return isErr(res) ? Err(fn(res.error)) : Ok(res.value);
 }
 
@@ -100,7 +108,10 @@ export function mapErr<T, E, F>(res: Result<T, E>, fn: (error: E) => F): Result<
  * @param fn The function to apply, which returns another `Result`.
  * @returns A new `Result` resulting from the chained operation.
  */
-export function flatMap<T, E, U>(res: Result<T, E>, fn: (value: T) => Result<U, E>): Result<U, E> {
+export function flatMap<T, E, U>(
+  res: Result<T, E>,
+  fn: (value: T) => Result<U, E>,
+): Result<U, E> {
   return isOk(res) ? fn(res.value) : Err(res.error);
 }
 
@@ -110,7 +121,10 @@ export function flatMap<T, E, U>(res: Result<T, E>, fn: (value: T) => Result<U, 
  * @param fallback The `Result` to return if `res` is "Err".
  * @returns The original `Result` if "Ok", or the fallback `Result` if "Err".
  */
-export function orElse<T, E>(res: Result<T, E>, fallback: Result<T, E>): Result<T, E> {
+export function orElse<T, E>(
+  res: Result<T, E>,
+  fallback: Result<T, E>,
+): Result<T, E> {
   return isOk(res) ? res : fallback;
 }
 
@@ -121,7 +135,10 @@ export function orElse<T, E>(res: Result<T, E>, fallback: Result<T, E>): Result<
  * @param errorMap A function to transform the caught error into the desired error type `E`.
  * @returns A new function that returns a `Result`.
  */
-export function fromThrowable<T, E, Args extends any[]>(fn: (...args: Args) => T, errorMap: (e: unknown) => E): (...args: Args) => Result<T, E> {
+export function fromThrowable<T, E, Args extends unknown[]>(
+  fn: (...args: Args) => T,
+  errorMap: (e: unknown) => E,
+): (...args: Args) => Result<T, E> {
   return (...args: Args): Result<T, E> => {
     try {
       return Ok(fn(...args));
@@ -138,10 +155,15 @@ export function fromThrowable<T, E, Args extends any[]>(fn: (...args: Args) => T
  * @param onErr The function to execute if the `Result` is "Err".
  * @returns The result of applying either `onOk` or `onErr`.
  */
-export function match<T, E, R>(res: Result<T, E>, onOk: (val: T) => R, onErr: (err: E) => R): R {
+export function match<T, E, R>(
+  res: Result<T, E>,
+  onOk: (val: T) => R,
+  onErr: (err: E) => R,
+): R {
   if (isOk(res)) {
     return onOk(res.value);
   } else {
     return onErr(res.error);
   }
 }
+

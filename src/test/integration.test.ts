@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { Option, Some, None, isSome, unwrapOption, unwrapOrOption, fromNullable, fromUndefined, matchOption, mapOption, fromThrowableOption, flatMapOption, orElseOption, filterOption, Result, Ok, Err, isOk, isErr, unwrap, unwrapErr, unwrapOr, map, mapErr, flatMap, orElse, fromThrowable, match } from "..";
+import { type Option, Some, None, isSome, unwrapOption, unwrapOrOption, fromNullable, fromUndefined, matchOption, mapOption, fromThrowableOption, flatMapOption, orElseOption, filterOption, type Result, Ok, Err, isOk, isErr, unwrap, unwrapErr, unwrapOr, map, mapErr, flatMap, orElse, fromThrowable, match } from "..";
 
 // --- Scenario 1: User Input Parsing and Calculation ---
 
