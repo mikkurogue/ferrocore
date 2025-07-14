@@ -1,7 +1,7 @@
 {
-	"name": "@mikkurogue/option-ts",
-	"version": "0.1.6",
-	"description": "Rust-style Option<T> type for TypeScript",
+	"name": "@mikkurogue/ferrocore",
+	"version": "0.0.1",
+	"description": "A rust-inspired library for handling Option and Result types in TypeScript",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -27,25 +27,22 @@
 	},
 	"keywords": [
 		"option",
+		"result",
 		"rust",
 		"none",
 		"some",
 		"utility",
-		"pattern-match"
+		"pattern-match",
+		"ferrocore"
 	],
 	"scripts": {
-		"build": "tsgo",
+		"build": "tsc",
 		"test": "vitest"
 	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/mikkurogue/option-ts"
-	},
-	"author": "mikkurogue",
-	"license": "GPLV2",
 	"devDependencies": {
 		"@biomejs/biome": "2.1.1",
-		"@typescript/native-preview": "7.0.0-dev.20250710.1",
+		"typescript": "^5.8.3",
 		"vitest": "^3.1.4"
 	}
 }
+

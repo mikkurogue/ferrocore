@@ -15,7 +15,7 @@ export type Result<T, E> = { kind: "Ok"; value: T } | { kind: "Err"; error: E };
 Creates a `Result` that represents a successful outcome.
 
 ```typescript
-import { Result, Ok } from '@mikkurogue/option-ts/result';
+import { Result, Ok } from '@mikkurogue/ferrocore/result';
 
 const success = Ok(123);
 // success is { kind: "Ok", value: 123 }
@@ -26,7 +26,7 @@ const success = Ok(123);
 Creates a `Result` that represents a failed outcome.
 
 ```typescript
-import { Result, Err } from '@mikkurogue/option-ts/result';
+import { Result, Err } from '@mikkurogue/ferrocore/result';
 
 const failure = Err("Something went wrong");
 // failure is { kind: "Err", error: "Something went wrong" }
@@ -37,7 +37,7 @@ const failure = Err("Something went wrong");
 Checks if a `Result` represents a successful outcome (is "Ok").
 
 ```typescript
-import { Result, isOk } from '@mikkurogue/option-ts/result';
+import { Result, isOk } from '@mikkurogue/ferrocore/result';
 
 const res = Ok(10);
 if (isOk(res)) {
@@ -53,7 +53,7 @@ console.log(isOk(err)); // false
 Checks if a `Result` represents a failed outcome (is "Err").
 
 ```typescript
-import { Result, isErr } from '@mikkurogue/option-ts/result';
+import { Result, isErr } from '@mikkurogue/ferrocore/result';
 
 const err = Err("Error");
 if (isErr(err)) {
@@ -69,7 +69,7 @@ console.log(isErr(res)); // false
 Extracts the successful value from an "Ok" `Result`. Throws an error if the `Result` is "Err". Use with caution.
 
 ```typescript
-import { Result, Ok, Err, unwrap } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, unwrap } from '@mikkurogue/ferrocore/result';
 
 const res = Ok(10);
 console.log(unwrap(res)); // 10
@@ -83,7 +83,7 @@ const err = Err("Error");
 Extracts the error value from an "Err" `Result`. Throws an error if the `Result` is "Ok". Use with caution.
 
 ```typescript
-import { Result, Ok, Err, unwrapErr } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, unwrapErr } from '@mikkurogue/ferrocore/result';
 
 const err = Err("Something went wrong");
 console.log(unwrapErr(err)); // Something went wrong
@@ -97,7 +97,7 @@ const res = Ok(10);
 Extracts the successful value from an "Ok" `Result`, or returns a fallback value if it's "Err".
 
 ```typescript
-import { Result, Ok, Err, unwrapOr } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, unwrapOr } from '@mikkurogue/ferrocore/result';
 
 const res = Ok(10);
 console.log(unwrapOr(res, 0)); // 10
@@ -111,7 +111,7 @@ console.log(unwrapOr(err, 0)); // 0
 Transforms the successful value inside an "Ok" `Result` using a mapping function. If the `Result` is "Err", it remains "Err".
 
 ```typescript
-import { Result, Ok, Err, map } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, map } from '@mikkurogue/ferrocore/result';
 
 const res = Ok(5);
 const mappedRes = map(res, (x) => x * 2); // Ok(10)
@@ -125,7 +125,7 @@ const mappedErr = map(err, (x: number) => x * 2); // Err("Error")
 Transforms the error value inside an "Err" `Result` using a mapping function. If the `Result` is "Ok", it remains "Ok".
 
 ```typescript
-import { Result, Ok, Err, mapErr } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, mapErr } from '@mikkurogue/ferrocore/result';
 
 const err = Err("File not found");
 const mappedErr = mapErr(err, (e) => `Failed: ${e}`); // Err("Failed: File not found")
@@ -139,7 +139,7 @@ const mappedRes = mapErr(res, (e: string) => `Failed: ${e}`); // Ok(10)
 Chains operations that return `Result` types. If the current `Result` is "Ok", it applies the function and returns the new `Result`. If it's "Err", it propagates the "Err".
 
 ```typescript
-import { Result, Ok, Err, flatMap } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, flatMap } from '@mikkurogue/ferrocore/result';
 
 const divideByTwo = (num: number): Result<number, string> => {
   if (num % 2 !== 0) return Err("Not divisible by 2");
@@ -158,7 +158,7 @@ const chainedRes2 = flatMap(res2, divideByTwo); // Err("Not divisible by 2")
 Returns the `Result` if it is "Ok", otherwise returns the provided fallback `Result`.
 
 ```typescript
-import { Result, Ok, Err, orElse } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, orElse } from '@mikkurogue/ferrocore/result';
 
 const res = Ok(10);
 const result1 = orElse(res, Ok(0)); // Ok(10)
@@ -172,7 +172,7 @@ const result2 = orElse(err, Ok(0)); // Ok(0)
 Wraps a potentially throwing function into a function that returns a `Result`. If the original function executes successfully, it returns `Ok(result)`. If it throws, it returns `Err(errorMap(e))`.
 
 ```typescript
-import { Result, Ok, Err, fromThrowable } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, fromThrowable } from '@mikkurogue/ferrocore/result';
 
 const safeParseJson = fromThrowable(
   JSON.parse,
@@ -188,7 +188,7 @@ const json2 = safeParseJson('invalid json'); // Err("Unexpected token 'i'...")
 Provides a way to handle both "Ok" and "Err" cases of a `Result`.
 
 ```typescript
-import { Result, Ok, Err, match } from '@mikkurogue/option-ts/result';
+import { Result, Ok, Err, match } from '@mikkurogue/ferrocore/result';
 
 const res = Ok(10);
 const result1 = match(

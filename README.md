@@ -1,4 +1,4 @@
-# @mikkurogue/option-ts
+# @mikkurogue/ferrocore
 
 A TypeScript library providing Rust-inspired `Option` and `Result` types for robust error handling and explicit value presence.
 
@@ -13,9 +13,9 @@ A TypeScript library providing Rust-inspired `Option` and `Result` types for rob
 ## Installation
 
 ```bash
-npm install @mikkurogue/option-ts
+npm install @mikkurogue/ferrocore
 # or
-yarn add @mikkurogue/option-ts
+yarn add @mikkurogue/ferrocore
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ yarn add @mikkurogue/option-ts
 ### Option Example
 
 ```typescript
-import { Option, Some, None, ifSome, unwrapOption, unwrapOrOption } from '@mikkurogue/option-ts';
+import { Option, Some, None, ifSome, unwrapOption, unwrapOrOption } from '@mikkurogue/ferrocore';
 
 function getUserById(id: string): Option<{ name: string }> {
   if (id === "123") {
@@ -49,7 +49,7 @@ console.log(defaultUserName); // Guest
 ### Result Example
 
 ```typescript
-import { Result, Ok, Err, match, fromThrowable } from '@mikkurogue/option-ts';
+import { Result, Ok, Err, match, fromThrowable } from '@mikkurogue/ferrocore';
 
 function divide(a: number, b: number): Result<number, string> {
   if (b === 0) {
@@ -91,7 +91,7 @@ For more detailed information and examples, please refer to the [full documentat
 
 ## Build System
 
-This project uses [tsgo](https://github.com/microsoft/typescript-go) as its build system for fast and efficient compilation.
+This project uses the standard TypeScript compiler (`tsc`) for its build system.
 
 ## Contributing
 
