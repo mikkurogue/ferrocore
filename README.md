@@ -23,7 +23,7 @@ yarn add @mikkurogue/ferrocore
 ### Option Example
 
 ```typescript
-import { Option, Some, None, ifSome, unwrapOption, unwrapOrOption } from '@mikkurogue/ferrocore';
+import { Option, Some, None, ifSome, unwrapOption, unwrapOrOption } from '@mikkurogue/ferrocore/option';
 
 function getUserById(id: string): Option<{ name: string }> {
   if (id === "123") {
@@ -49,7 +49,7 @@ console.log(defaultUserName); // Guest
 ### Result Example
 
 ```typescript
-import { Result, Ok, Err, match, fromThrowable } from '@mikkurogue/ferrocore';
+import { Result, Ok, Err, match, fromThrowable } from '@mikkurogue/ferrocore/result';
 
 function divide(a: number, b: number): Result<number, string> {
   if (b === 0) {
