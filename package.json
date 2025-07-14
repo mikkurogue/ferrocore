@@ -1,6 +1,6 @@
 {
 	"name": "@mikkurogue/ferrocore",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"description": "A rust-inspired library for handling Option and Result types in TypeScript",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -9,11 +9,6 @@
 		"dist"
 	],
 	"exports": {
-		".": {
-			"import": "./dist/index.js",
-			"require": "./dist/index.js",
-			"types": "./dist/index.d.ts"
-		},
 		"./option": {
 			"import": "./dist/option/index.js",
 			"require": "./dist/option/index.js",
