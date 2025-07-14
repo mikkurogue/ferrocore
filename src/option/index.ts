@@ -53,7 +53,7 @@ export function ifSome<T>(opt: Option<T>, fn: (val: T) => void): void {
  * @returns The inner value of the "Some" `Option`.
  * @throws {Error} If the `Option` is "None".
  */
-export function unwrapOption<T>(opt: Option<T>): T {
+export function unwrap<T>(opt: Option<T>): T {
   if (isSome(opt)) return opt.value;
 
   throw new Error("Tried to unwrap None");
@@ -65,7 +65,7 @@ export function unwrapOption<T>(opt: Option<T>): T {
  * @param fallback The value to return if `opt` is "None".
  * @returns The inner value of the "Some" `Option`, or the fallback value.
  */
-export function unwrapOrOption<T>(opt: Option<T>, fallback: T): T {
+export function unwrapOr<T>(opt: Option<T>, fallback: T): T {
   return isSome(opt) ? opt.value : fallback;
 }
 
@@ -94,7 +94,7 @@ export function fromUndefined<T>(val: T | undefined): Option<T> {
  * @param opt The `Option` to match against.
  * @returns An object with `Some` and `None` methods to handle each case.
  */
-export function matchOption<T, R>(opt: Option<T>) {
+export function match<T, R>(opt: Option<T>) {
   return {
     /**
      * Executes a function if the `Option` is "Some" and returns a new `Option` with the transformed value.
@@ -122,7 +122,7 @@ export function matchOption<T, R>(opt: Option<T>) {
  * @param fn The mapping function to apply to the inner value.
  * @returns A new `Option` with the transformed value, or "None" if the original was "None".
  */
-export function mapOption<T, U>(
+export function map<T, U>(
   opt: Option<T>,
   fn: (value: T) => U,
 ): Option<U> {
@@ -135,7 +135,7 @@ export function mapOption<T, U>(
  * @param fn The function that might throw an error.
  * @returns A new function that returns an `Option`.
  */
-export function fromThrowableOption<T, Args extends unknown[]>(
+export function fromThrowable<T, Args extends unknown[]>(
   fn: (...args: Args) => T,
 ): (...args: Args) => Option<T> {
   return (...args: Args): Option<T> => {
@@ -155,7 +155,7 @@ export function fromThrowableOption<T, Args extends unknown[]>(
  * @param fn The function to apply, which returns another `Option`.
  * @returns A new `Option` resulting from the chained operation.
  */
-export function flatMapOption<T, U>(
+export function flatMap<T, U>(
   opt: Option<T>,
   fn: (value: T) => Option<U>,
 ): Option<U> {
@@ -168,7 +168,7 @@ export function flatMapOption<T, U>(
  * @param fallback The `Option` to return if `opt` is "None".
  * @returns The original `Option` if "Some", or the fallback `Option` if "None".
  */
-export function orElseOption<T>(
+export function orElse<T>(
   opt: Option<T>,
   fallback: Option<T>,
 ): Option<T> {
@@ -183,7 +183,7 @@ export function orElseOption<T>(
  * @param predicate The function to test the inner value.
  * @returns The filtered `Option`.
  */
-export function filterOption<T>(
+export function filter<T>(
   opt: Option<T>,
   predicate: (value: T) => boolean,
 ): Option<T> {

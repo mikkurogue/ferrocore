@@ -81,32 +81,32 @@ ifSome(None(), (val) => {
 });
 ```
 
-### `unwrapOption<T>(opt: Option<T>): T`
+### `unwrap<T>(opt: Option<T>): T`
 
 Extracts the value from a "Some" `Option`. Throws an error if the `Option` is "None". Use with caution.
 
 ```typescript
-import { Option, Some, None, unwrapOption } from '@mikkurogue/ferrocore/option';
+import { Option, Some, None, unwrap } from '@mikkurogue/ferrocore/option';
 
 const value = Some(10);
-console.log(unwrapOption(value)); // 10
+console.log(unwrap(value)); // 10
 
 const noValue = None();
-// unwrapOption(noValue); // Throws Error: Tried to unwrap None
+// unwrap(noValue); // Throws Error: Tried to unwrap None
 ```
 
-### `unwrapOrOption<T>(opt: Option<T>, fallback: T): T`
+### `unwrapOr<T>(opt: Option<T>, fallback: T): T`
 
 Extracts the value from a "Some" `Option`, or returns a fallback value if it's "None".
 
 ```typescript
-import { Option, Some, None, unwrapOrOption } from '@mikkurogue/ferrocore/option';
+import { Option, Some, None, unwrapOr } from '@mikkurogue/ferrocore/option';
 
 const value = Some(10);
-console.log(unwrapOrOption(value, 0)); // 10
+console.log(unwrapOr(value, 0)); // 10
 
 const noValue = None();
-console.log(unwrapOrOption(noValue, 0)); // 0
+console.log(unwrapOr(noValue, 0)); // 0
 ```
 
 ### `fromNullable<T>(val: T | null): Option<T>`
@@ -137,90 +137,90 @@ const definedValue: number | undefined = 456;
 const option2 = fromUndefined(definedValue); // Some(456)
 ```
 
-### `matchOption<T, R>(opt: Option<T>)`
+### `match<T, R>(opt: Option<T>)`
 
 Provides a way to handle both "Some" and "None" cases of an `Option`.
 
 ```typescript
-import { Option, Some, None, matchOption } from '@mikkurogue/ferrocore/option';
+import { Option, Some, None, match } from '@mikkurogue/ferrocore/option';
 
 const value = Some(10);
-const result1 = matchOption(value).Some((val) => val * 2);
+const result1 = match(value).Some((val) => val * 2);
 // result1 is Some(20)
 
 const noValue = None();
-const result2 = matchOption(noValue).None(() => "default");
+const result2 = match(noValue).None(() => "default");
 // result2 is Some("default")
 ```
 
-### `mapOption<T, U>(opt: Option<T>, fn: (value: T) => U): Option<U>`
+### `map<T, U>(opt: Option<T>, fn: (value: T) => U): Option<U>`
 
 Transforms the value inside a "Some" `Option` using a mapping function. If the `Option` is "None", it remains "None".
 
 ```typescript
-import { Option, Some, None, mapOption } from '@mikkurogue/ferrocore/option';
+import { Option, Some, None, map } from '@mikkurogue/ferrocore/option';
 
 const value = Some(5);
-const mappedValue = mapOption(value, (x) => x * 2); // Some(10)
+const mappedValue = map(value, (x) => x * 2); // Some(10)
 
 const noValue = None();
-const mappedNoValue = mapOption(noValue, (x: number) => x * 2); // None()
+const mappedNoValue = map(noValue, (x: number) => x * 2); // None()
 ```
 
-### `fromThrowableOption<T, Args extends any[]>(fn: (...args: Args) => T): (...args: Args) => Option<T>`
+### `fromThrowable<T, Args extends any[]>(fn: (...args: Args) => T): (...args: Args) => Option<T>`
 
 Wraps a potentially throwing function into a function that returns an `Option`. If the original function executes successfully, it returns `Some(result)`. If it throws, it returns `None()`.
 
 ```typescript
-import { Option, Some, None, fromThrowableOption } from '@mikkurogue/ferrocore/option';
+import { Option, Some, None, fromThrowable } from '@mikkurogue/ferrocore/option';
 
-const safeParseInt = fromThrowableOption(parseInt);
+const safeParseInt = fromThrowable(parseInt);
 
 const num1 = safeParseInt("123"); // Some(123)
 const num2 = safeParseInt("abc"); // None()
 ```
 
-### `flatMapOption<T, U>(opt: Option<T>, fn: (value: T) => Option<U>): Option<U>`
+### `flatMap<T, U>(opt: Option<T>, fn: (value: T) => Option<U>): Option<U>`
 
 Chains operations that return `Option` types. If the current `Option` is "Some", it applies the function and returns the new `Option`. If it's "None", it propagates the "None".
 
 ```typescript
-import { Option, Some, None, fromUndefined, flatMapOption } from '@mikkurogue/ferrocore/option';
+import { Option, Some, None, fromUndefined, flatMap } from '@mikkurogue/ferrocore/option';
 
 const getUserAge = (user: { name: string; age?: number }): Option<number> => {
   return fromUndefined(user.age);
 };
 
 const user1 = Some({ name: "Alice", age: 30 });
-const age1 = flatMapOption(user1, getUserAge); // Some(30)
+const age1 = flatMap(user1, getUserAge); // Some(30)
 
 const user2 = Some({ name: "Bob" });
-const age2 = flatMapOption(user2, getUserAge); // None()
+const age2 = flatMap(user2, getUserAge); // None()
 ```
 
-### `orElseOption<T>(opt: Option<T>, fallback: Option<T>): Option<T>`
+### `orElse<T>(opt: Option<T>, fallback: Option<T>): Option<T>`
 
 Returns the `Option` if it is "Some", otherwise returns the provided fallback `Option`.
 
 ```typescript
-import { Option, Some, None, orElseOption } from '@mikkurogue/ferrocore/option';
+import { Option, Some, None, orElse } from '@mikkurogue/ferrocore/option';
 
 const value = Some(10);
-const result1 = orElseOption(value, Some(0)); // Some(10)
+const result1 = orElse(value, Some(0)); // Some(10)
 
 const noValue = None();
-const result2 = orElseOption(noValue, Some(0)); // Some(0)
+const result2 = orElse(noValue, Some(0)); // Some(0)
 ```
 
-### `filterOption<T>(opt: Option<T>, predicate: (value: T) => boolean): Option<T>`
+### `filter<T>(opt: Option<T>, predicate: (value: T) => boolean): Option<T>`
 
 Filters a "Some" `Option` based on a predicate. If the `Option` is "Some" and the predicate returns `true`, it remains "Some". Otherwise, it becomes "None".
 
 ```typescript
-import { Option, Some, None, filterOption } from '@mikkurogue/ferrocore/option';
+import { Option, Some, None, filter } from '@mikkurogue/ferrocore/option';
 
 const value = Some(10);
-const filteredValue1 = filterOption(value, (x) => x > 5); // Some(10)
+const filteredValue1 = filter(value, (x) => x > 5); // Some(10)
 
-const filteredValue2 = filterOption(value, (x) => x > 15); // None()
+const filteredValue2 = filter(value, (x) => x > 15); // None()
 ```
