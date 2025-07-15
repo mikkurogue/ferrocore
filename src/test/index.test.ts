@@ -1,253 +1,253 @@
 import { test, expect } from "vitest";
-import { Option, Some, None, isSome, isNone, ifSome, unwrap, unwrapOr, fromNullable, fromUndefined, match, map, fromThrowable, flatMap, orElse, filter } from "@mikkurogue/ferrocore/option";
-import { Result, Ok, Err, isOk, isErr, unwrap as unwrapResult, unwrapErr, unwrapOr as unwrapOrResult, map as mapResult, mapErr, flatMap as flatMapResult, orElse as orElseResult, fromThrowable as fromThrowableResult, match as matchResult } from "@mikkurogue/ferrocore/result";
+import { Option, Some, None, fromNullable } from "../option";
+import { Result, Ok, Err } from "../result";
 
 test("Some holds value", () => {
     const value = Some(123);
-    expect(isSome(value)).toBe(true);
+    expect(value.isSome()).toBe(true);
 });
 
 test("ifSome works", () => {
     let x = 0;
-    ifSome(Some(10), (v: number) => (x = v));
+    Some(10).ifSome((v: number) => (x = v));
     expect(x).toBe(10);
 });
 
 test("fromNullable null value returns none", () => {
     const val = fromNullable(null);
-    expect(val.kind).toBe("None")
+    expect(val.isNone()).toBe(true);
 })
 
 test("unwrap Some returns value", () => {
-    expect(unwrap(Some(5))).toBe(5);
+    expect(Some(5).unwrap()).toBe(5);
 });
 
 test("unwrap None throws error", () => {
-    expect(() => unwrap(None())).toThrow("Tried to unwrap None");
+    expect(() => None().unwrap()).toThrow("Tried to unwrap None");
 });
 
 test("unwrapOr Some returns value", () => {
-    expect(unwrapOr(Some(5), 10)).toBe(5);
+    expect(Some(5).unwrapOr(10)).toBe(5);
 });
 
 test("unwrapOr None returns fallback", () => {
-    expect(unwrapOr(None(), 10)).toBe(10);
+    expect(None().unwrapOr(10)).toBe(10);
 });
 
 test("map transforms Some value", () => {
-    const result = map(Some(5), (x: number) => x * 2);
-    expect(isSome(result)).toBe(true);
-    expect(unwrap(result)).toBe(10);
+    const result = Some(5).map((x: number) => x * 2);
+    expect(result.isSome()).toBe(true);
+    expect(result.unwrap()).toBe(10);
 });
 
 test("map does not transform None", () => {
-    const result = map(None(), (x: number) => x * 2);
-    expect(result.kind).toBe("None");
+    const result = None().map((x: number) => x * 2);
+    expect(result.isNone()).toBe(true);
 });
 
 test("flatMap chains Some values", () => {
-    const result = flatMap(Some(5), (x: number) => Some(x * 2));
-    expect(isSome(result)).toBe(true);
-    expect(unwrap(result)).toBe(10);
+    const result = Some(5).flatMap((x: number) => Some(x * 2));
+    expect(result.isSome()).toBe(true);
+    expect(result.unwrap()).toBe(10);
 });
 
 test("flatMap propagates None", () => {
-    const result = flatMap(Some(5), (x: number) => None());
-    expect(result.kind).toBe("None");
+    const result = Some(5).flatMap((x: number) => None());
+    expect(result.isNone()).toBe(true);
 });
 
 test("flatMap handles initial None", () => {
-    const result = flatMap(None(), (x: number) => Some(x * 2));
-    expect(result.kind).toBe("None");
+    const result = None().flatMap((x: number) => Some(x * 2));
+    expect(result.isNone()).toBe(true);
 });
 
 test("orElse returns original Some", () => {
-    const result = orElse(Some(5), Some(10));
-    expect(isSome(result)).toBe(true);
-    expect(unwrap(result)).toBe(5);
+    const result = Some(5).orElse(Some(10));
+    expect(result.isSome()).toBe(true);
+    expect(result.unwrap()).toBe(5);
+});
+
+test("orElse does not evaluate fallback for Some", () => {
+    const result = Some(5).orElse(None());
+    expect(result.isSome()).toBe(true);
+    expect(result.unwrap()).toBe(5);
 });
 
 test("orElse returns fallback for None", () => {
-    const result = orElse(None(), Some(10));
-    expect(isSome(result)).toBe(true);
-    expect(unwrap(result)).toBe(10);
+    const result = None().orElse(Some(10));
+    expect(result.isSome()).toBe(true);
+    expect(result.unwrap()).toBe(10);
 });
 
 test("filter returns Some if predicate is true", () => {
-    const result = filter(Some(5), (x: number) => x > 0);
-    expect(isSome(result)).toBe(true);
-    expect(unwrap(result)).toBe(5);
+    const result = Some(5).filter((x: number) => x > 0);
+    expect(result.isSome()).toBe(true);
+    expect(result.unwrap()).toBe(5);
 });
 
 test("filter returns None if predicate is false", () => {
-    const result = filter(Some(5), (x: number) => x < 0);
-    expect(result.kind).toBe("None");
+    const result = Some(5).filter((x: number) => x < 0);
+    expect(result.isNone()).toBe(true);
 });
 
 test("filter returns None for initial None", () => {
-    const result = filter(None(), (x: number) => x > 0);
-    expect(result.kind).toBe("None");
+    const result = None().filter((x: number) => x > 0);
+    expect(result.isNone()).toBe(true);
 });
 
 test("match Some returns Some of result", () => {
-    const result = match(Some(10)).Some((val: number) => val * 2);
-    expect(isSome(result)).toBe(true);
-    expect(unwrap(result)).toBe(20);
-});
-
-test("match Some returns None when None branch is taken", () => {
-    const result = match(None()).Some((val: number) => val * 2);
-    expect(result.kind).toBe("None");
+    const result = Some(10).match((val: number) => val * 2, () => 0);
+    expect(result).toBe(20);
 });
 
 test("match None returns Some of result", () => {
-    const result = match(None()).None(() => "default");
-    expect(isSome(result)).toBe(true);
-    expect(unwrap(result)).toBe("default");
-});
-
-test("match None returns None when Some branch is taken", () => {
-    const result = match(Some(10)).None(() => "default");
-    expect(result.kind).toBe("None");
+    const result = None().match((val: never) => val, () => "default");
+    expect(result).toBe("default");
 });
 
 test("fromThrowable returns Some on success", () => {
-    const safeDivide = fromThrowable((a: number, b: number) => {
+    const safeDivide = Option.fromThrowable((a: number, b: number) => {
         if (b === 0) throw new Error("Division by zero");
         return a / b;
     });
     const result = safeDivide(10, 2);
-    expect(isSome(result)).toBe(true);
-    expect(unwrap(result)).toBe(5);
+    expect(result.isSome()).toBe(true);
+    expect(result.unwrap()).toBe(5);
 });
 
 test("fromThrowable returns None on error", () => {
-    const safeDivide = fromThrowable((a: number, b: number) => {
+    const safeDivide = Option.fromThrowable((a: number, b: number) => {
         if (b === 0) throw new Error("Division by zero");
         return a / b;
     });
     const result = safeDivide(10, 0);
-    expect(result.kind).toBe("None");
+    expect(result.isNone()).toBe(true);
 });
 
 // Result Type Tests
 
 test("Ok holds value", () => {
     const value = Ok(123);
-    expect(isOk(value)).toBe(true);
-    expect(isErr(value)).toBe(false);
+    expect(value.isOk()).toBe(true);
+    expect(value.isErr()).toBe(false);
 });
 
 test("Err holds error", () => {
     const error = Err("Something went wrong");
-    expect(isErr(error)).toBe(true);
-    expect(isOk(error)).toBe(false);
+    expect(error.isErr()).toBe(true);
+    expect(error.isOk()).toBe(false);
 });
 
 test("unwrap Ok returns value", () => {
-    expect(unwrapResult(Ok(5))).toBe(5);
+    expect(Ok(5).unwrap()).toBe(5);
 });
 
 test("unwrap Err throws error", () => {
-    expect(() => unwrapResult(Err("Error"))).toThrow("Tried to unwrap Err");
+    expect(() => Err("Error").unwrap()).toThrow("Tried to unwrap Err");
 });
 
 test("unwrapErr Err returns error", () => {
-    expect(unwrapErr(Err("Error"))).toBe("Error");
+    expect(Err("Error").unwrapErr()).toBe("Error");
 });
 
 test("unwrapErr Ok throws error", () => {
-    expect(() => unwrapErr(Ok(5))).toThrow("Tried to unwrap Ok as Err");
+    expect(() => Ok(5).unwrapErr()).toThrow("Tried to unwrap Ok as Err");
 });
 
 test("unwrapOr Ok returns value", () => {
-    expect(unwrapOrResult(Ok(5), 10)).toBe(5);
+    expect(Ok(5).unwrapOr(10)).toBe(5);
 });
 
 test("unwrapOr Err returns fallback", () => {
-    expect(unwrapOrResult(Err("Error"), 10)).toBe(10);
+    expect(Err("Error").unwrapOr(10)).toBe(10);
 });
 
 test("map transforms Ok value", () => {
-    const result = mapResult(Ok(5), (x: number) => x * 2);
-    expect(isOk(result)).toBe(true);
-    expect(unwrapResult(result)).toBe(10);
+    const result = Ok(5).map((x: number) => x * 2);
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap()).toBe(10);
 });
 
 test("map does not transform Err", () => {
-    const result = mapResult(Err<number, string>("Error"), (x: number) => x * 2);
-    expect(isErr(result)).toBe(true);
-    expect(unwrapErr(result)).toBe("Error");
+    const result = Err<number, string>("Error").map((x: number) => x * 2);
+    expect(result.isErr()).toBe(true);
+    expect(result.unwrapErr()).toBe("Error");
 });
 
 test("mapErr transforms Err value", () => {
-    const result = mapErr(Err<number, Error>(new Error("Original")), (e: Error) => e.message);
-    expect(isErr(result)).toBe(true);
-    expect(unwrapErr(result)).toBe("Original");
+    const result = Err<number, Error>(new Error("Original")).mapErr((e: Error) => e.message);
+    expect(result.isErr()).toBe(true);
+    expect(result.unwrapErr()).toBe("Original");
 });
 
 test("mapErr does not transform Ok", () => {
-    const result = mapErr(Ok<number, Error>(5), (e: Error) => e.message);
-    expect(isOk(result)).toBe(true);
-    expect(unwrapResult(result)).toBe(5);
+    const result = Ok<number, Error>(5).mapErr((e: Error) => e.message);
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap()).toBe(5);
 });
 
 test("flatMap chains Ok values", () => {
-    const result = flatMapResult(Ok(5), (x: number) => Ok(x * 2));
-    expect(isOk(result)).toBe(true);
-    expect(unwrapResult(result)).toBe(10);
+    const result = Ok(5).flatMap((x: number) => Ok(x * 2));
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap()).toBe(10);
 });
 
 test("flatMap propagates Err", () => {
-    const result = flatMapResult(Ok(5), (x: number) => Err<number, string>("Error from flatMap"));
-    expect(isErr(result)).toBe(true);
-    expect(unwrapErr(result)).toBe("Error from flatMap");
+    const result = Ok(5).flatMap((x: number) => Err<number, string>("Error from flatMap"));
+    expect(result.isErr()).toBe(true);
+    expect(result.unwrapErr()).toBe("Error from flatMap");
 });
 
 test("flatMap handles initial Err", () => {
-    const result = flatMapResult(Err<number, string>("Initial error"), (x: number) => Ok(x * 2));
-    expect(isErr(result)).toBe(true);
-    expect(unwrapErr(result)).toBe("Initial error");
+    const result = Err<number, string>("Initial error").flatMap((x: number) => Ok(x * 2));
+    expect(result.isErr()).toBe(true);
+    expect(result.unwrapErr()).toBe("Initial error");
 });
 
 test("orElse returns original Ok", () => {
-    const result = orElseResult(Ok(5), Ok(10));
-    expect(isOk(result)).toBe(true);
-    expect(unwrapResult(result)).toBe(5);
+    const result = Ok(5).orElse(Ok(10));
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap()).toBe(5);
+});
+
+test("orElse does not evaluate fallback for Ok", () => {
+    const result = Ok(5).orElse(Err("Error"));
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap()).toBe(5);
 });
 
 test("orElse returns fallback for Err", () => {
-    const result = orElseResult(Err("Error"), Ok(10));
-    expect(isOk(result)).toBe(true);
-    expect(unwrapResult(result)).toBe(10);
+    const result = Err("Error").orElse(Ok(10));
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap()).toBe(10);
 });
 
 test("fromThrowable returns Ok on success", () => {
-    const safeDivide = fromThrowableResult((a: number, b: number) => {
+    const safeDivide = Result.fromThrowable((a: number, b: number) => {
         if (b === 0) throw new Error("Division by zero");
         return a / b;
     }, (e: unknown) => (e as Error).message);
     const result = safeDivide(10, 2);
-    expect(isOk(result)).toBe(true);
-    expect(unwrapResult(result)).toBe(5);
+    expect(result.isOk()).toBe(true);
+    expect(result.unwrap()).toBe(5);
 });
 
 test("fromThrowable returns Err on error", () => {
-    const safeDivide = fromThrowableResult((a: number, b: number) => {
+    const safeDivide = Result.fromThrowable((a: number, b: number) => {
         if (b === 0) throw new Error("Division by zero");
         return a / b;
     }, (e: unknown) => (e as Error).message);
     const result = safeDivide(10, 0);
-    expect(isErr(result)).toBe(true);
-    expect(unwrapErr(result)).toBe("Division by zero");
+    expect(result.isErr()).toBe(true);
+    expect(result.unwrapErr()).toBe("Division by zero");
 });
 
 test("match calls onOk for Ok", () => {
-    const result = matchResult(Ok<number, string>(10), (val: number) => val * 2, (err: string) => 0);
+    const result = Ok<number, string>(10).match((val: number) => val * 2, (err: string) => 0);
     expect(result).toBe(20);
 });
 
 test("match calls onErr for Err", () => {
-    const result = matchResult(Err<number, string>(("Error")), (val: number) => val * 2, (err: string) => err.length);
+    const result = Err<number, string>("Error").match((val: number) => val * 2, (err: string) => err.length);
     expect(result).toBe(5);
 });
