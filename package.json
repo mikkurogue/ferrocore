@@ -1,6 +1,6 @@
 {
 	"name": "@mikkurogue/ferrocore",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "A rust-inspired library for handling Option and Result types in TypeScript",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -9,6 +9,11 @@
 		"dist"
 	],
 	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		},
 		"./option": {
 			"import": "./dist/option/index.js",
 			"require": "./dist/option/index.js",
@@ -32,7 +37,8 @@
 	],
 	"scripts": {
 		"build": "tsc",
-		"test": "vitest"
+		"test": "vitest",
+		"lint": "npx biome lint --write ."
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.1.1",
