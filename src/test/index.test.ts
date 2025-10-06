@@ -1,7 +1,7 @@
 import { test, expect } from "vitest";
-import { Option, Some, None, fromNullable } from "../option";
-import { Result, Ok, Err } from "../result";
 import { Iter } from "../iter";
+import { Option } from "../option";
+import { Result } from "../result";
 
 test("Option.some holds value", () => {
 	const value = Option.some(123);
