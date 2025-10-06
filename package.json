@@ -23,6 +23,11 @@
 			"import": "./dist/result/index.js",
 			"require": "./dist/result/index.js",
 			"types": "./dist/result/index.d.ts"
+		},
+		"./array": {
+			"import": "./dist/array/index.js",
+			"require": "./dist/array/index.js",
+			"types": "./dist/array/index.d.ts"
 		}
 	},
 	"keywords": [
